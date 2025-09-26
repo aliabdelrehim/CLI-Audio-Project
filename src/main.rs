@@ -13,23 +13,23 @@ fn main() -> std::io::Result<()> {
             .expect("open default audio stream");
     let _sink = rodio::Sink::connect_new(&stream_handle.mixer());
 
-    // Load a sound from a file, using a path relative to Cargo.toml
-    let file1 = File::open("Blue_One_Love.mp3").unwrap();
-    let file2 = File::open("coldplay_a-sky-full-of-stars-coldplay.mp3").unwrap();
-    let file3 = File::open("Show_Me_The_Meaning_Of_Being_Lonely.mp3").unwrap();
-    // Decode that sound file into a source
-    let source1 = Decoder::try_from(file1).unwrap();
-    let source2 = Decoder::try_from(file2).unwrap();
-    let source3 = Decoder::try_from(file3).unwrap();
-    // Play the sound directly on the device
-    stream_handle.mixer().add(source1);
-    stream_handle.mixer().add(source2);
-    stream_handle.mixer().add(source3);
+    let files = [
+        "Blue_One_Love.mp3",
+        "coldplay_a-sky-full-of-stars-coldplay.mp3", 
+        "Show_Me_The_Meaning_Of_Being_Lonely.mp3"
+    ];
 
-    // The sound plays in a separate audio thread,
+    for file_path in files {
+        if let Ok(file) = File::open(file_path) {
+            if let Ok(source) = Decoder::try_from(file) {
+                stream_handle.mixer().add(source);
+            }
+        }
+    }
+
+    // The sound plays in a separate audio thread (test for 5 seconds),
     // so we need to keep the main thread alive while it's playing.
     std::thread::sleep(std::time::Duration::from_secs(5));
-    
     
     //code exectution is successful if it reaches ok function (success exit)
     Ok(()) 
