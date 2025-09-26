@@ -1,5 +1,8 @@
-use std::fs::File;
+use std::{fs::File, io::BufRead};
+use std::io::BufReader;
 use rodio::{Decoder};
+
+
 
 /*main function returns a result type that is either Ok
 or an error type std::io::Error
@@ -20,13 +23,16 @@ fn main() -> std::io::Result<()> {
     ];
 
     for file_path in files {
-        if let Ok(file) = File::open(file_path) {
-            if let Ok(source) = Decoder::try_from(file) {
-                stream_handle.mixer().add(source);
+        let file = File::open(file_path);
+        if let Ok(file) = file {
+            let reader = BufReader::new(file);
+            let decoded_file = Decoder::try_from(reader);
+            if let Ok(decoded_file) = decoded_file {
+                stream_handle.mixer().add(decoded_file);
             }
         }
     }
-
+    
     // The sound plays in a separate audio thread (test for 5 seconds),
     // so we need to keep the main thread alive while it's playing.
     std::thread::sleep(std::time::Duration::from_secs(5));
