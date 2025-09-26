@@ -28,7 +28,10 @@ fn main() -> std::io::Result<()> {
             let reader = BufReader::new(file);
             let decoded_file = Decoder::try_from(reader);
             if let Ok(decoded_file) = decoded_file {
-                stream_handle.mixer().add(decoded_file);
+                _sink.append(decoded_file);
+
+                std::thread::sleep(std::time::Duration::from_secs(10));
+                _sink.stop();
             }
         }
     }
