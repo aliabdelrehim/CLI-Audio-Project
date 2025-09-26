@@ -1,10 +1,3 @@
-/* 
-import env module from the standard library
-env: interact with the environment
-calling current_dir function to get the current working directory
-from the standard library environment module
-*/ 
-use std::env::current_dir;
 use std::fs::File;
 use rodio::{Decoder};
 
@@ -14,15 +7,12 @@ std::io: standard input/output library
 */
 fn main() -> std::io::Result<()> {
 
-    //? operator handles the results (Ok or Error)
-    let path = current_dir()?;
-    println!("The current directory is {}", path.display());
-
     // Get an output stream handle to the default physical sound device.
     // Note that the playback stops when the stream_handle is dropped.//!
     let stream_handle = rodio::OutputStreamBuilder::open_default_stream()
             .expect("open default audio stream");
     let _sink = rodio::Sink::connect_new(&stream_handle.mixer());
+
     // Load a sound from a file, using a path relative to Cargo.toml
     let file1 = File::open("Blue_One_Love.mp3").unwrap();
     let file2 = File::open("coldplay_a-sky-full-of-stars-coldplay.mp3").unwrap();
@@ -38,7 +28,6 @@ fn main() -> std::io::Result<()> {
 
     // The sound plays in a separate audio thread,
     // so we need to keep the main thread alive while it's playing.
-    println!("Playing sound for 5 seconds...");
     std::thread::sleep(std::time::Duration::from_secs(5));
     
     
