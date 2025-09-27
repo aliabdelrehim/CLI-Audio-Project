@@ -1,4 +1,4 @@
-use std::{fs::File, io::BufRead};
+use std::{fs::File};
 use std::io::BufReader;
 use rodio::{Decoder};
 
@@ -28,10 +28,18 @@ fn main() -> std::io::Result<()> {
             let reader = BufReader::new(file);
             let decoded_file = Decoder::try_from(reader);
             if let Ok(decoded_file) = decoded_file {
+
+                // Sink handles the audio playback instead of stream_handle.play
                 _sink.append(decoded_file);
 
-                std::thread::sleep(std::time::Duration::from_secs(10));
-                _sink.stop();
+                // loop over playback songs with play/pause for x and y seconds
+                while !_sink.empty() {
+                    _sink.play();
+                    std::thread::sleep(std::time::Duration::from_secs(5));
+
+                    _sink.pause();
+                    std::thread::sleep(std::time::Duration::from_secs(1));
+                }
             }
         }
     }
