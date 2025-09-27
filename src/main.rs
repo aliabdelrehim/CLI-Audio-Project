@@ -30,26 +30,38 @@ fn main() -> std::io::Result<()> {
 
                 // Sink handles the audio playback instead of stream_handle.play
                 _sink.append(decoded_file);
-
-                // loop over playback songs with play/pause for x and y seconds
-                while !_sink.empty() {
-                    
-                    print!("Playing...\n");
-                    _sink.play();
-                    std::thread::sleep(std::time::Duration::from_secs(10));
-                    
-                    print!("Paused for 1 second...\n");
-                    _sink.pause();                    
-
-                    print!("Skipped to next song...\n");
-                    _sink.skip_one();
-                    std::thread::sleep(std::time::Duration::from_secs(1)); 
-                    
-                }
             }
         }
     }
-    
+
+    let mut song_counter = 0;
+
+    // loop over playback songs with play/pause for x and y seconds
+    while !_sink.empty() {
+
+        song_counter += 1; // Increment the counter
+        println!("Playing song number: {}", song_counter);
+
+        print!("Playing for 5 seconds...\n");
+        _sink.play();
+        std::thread::sleep(std::time::Duration::from_secs(5));
+
+        print!("Paused for 5 second...\n");
+        _sink.pause();
+        std::thread::sleep(std::time::Duration::from_secs(5));
+
+        print!("Resuming playback for 3 seconds...\n");
+        _sink.play();
+        std::thread::sleep(std::time::Duration::from_secs(3)); 
+
+        _sink.skip_one();
+
+        if _sink.len() == 1 {
+            break;
+        }      
+        
+    }
+
     //code exectution is successful if it reaches ok function (success exit)
     Ok(()) 
 }
