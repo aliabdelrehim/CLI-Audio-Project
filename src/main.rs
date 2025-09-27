@@ -3,7 +3,6 @@ use std::io::BufReader;
 use rodio::{Decoder};
 
 
-
 /*main function returns a result type that is either Ok
 or an error type std::io::Error
 std::io: standard input/output library
@@ -43,10 +42,6 @@ fn main() -> std::io::Result<()> {
             }
         }
     }
-    
-    // The sound plays in a separate audio thread (test for 5 seconds),
-    // so we need to keep the main thread alive while it's playing.
-    std::thread::sleep(std::time::Duration::from_secs(5));
     
     //code exectution is successful if it reaches ok function (success exit)
     Ok(()) 
