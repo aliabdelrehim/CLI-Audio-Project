@@ -33,11 +33,18 @@ fn main() -> std::io::Result<()> {
 
                 // loop over playback songs with play/pause for x and y seconds
                 while !_sink.empty() {
+                    
+                    print!("Playing...\n");
                     _sink.play();
-                    std::thread::sleep(std::time::Duration::from_secs(5));
+                    std::thread::sleep(std::time::Duration::from_secs(10));
+                    
+                    print!("Paused for 1 second...\n");
+                    _sink.pause();                    
 
-                    _sink.pause();
-                    std::thread::sleep(std::time::Duration::from_secs(1));
+                    print!("Skipped to next song...\n");
+                    _sink.skip_one();
+                    std::thread::sleep(std::time::Duration::from_secs(1)); 
+                    
                 }
             }
         }
