@@ -1,6 +1,7 @@
 use std::{fs::File};
 use std::io::BufReader;
 use rodio::{Decoder};
+use std::io;
 
 
 /*main function returns a result type that is either Ok
@@ -36,6 +37,21 @@ fn main() -> std::io::Result<()> {
 
     let mut song_counter = 0;
 
+    let mut input_text = String::new();
+    println!("Please enter your input:");
+
+    // access the keyboard input from the library
+    io::stdin()
+        .read_line(&mut input_text)
+        .expect("failed to read from stdin");
+
+    let trimmed = input_text.trim();
+    println!("Your string input: {}", trimmed);
+
+    if trimmed == "p" {
+        println!("success");
+    }
+
     // loop over playback songs with play/pause for x and y seconds
     while !_sink.empty() {
 
@@ -65,3 +81,18 @@ fn main() -> std::io::Result<()> {
     //code exectution is successful if it reaches ok function (success exit)
     Ok(()) 
 }
+
+
+/* play song 1
+play song 2
+pause song 2
+if it detects index of song 2, play song 1 again
+if it happens once continue
+play song 2 again
+play song 3
+*/ 
+
+/*
+
+*/
+
