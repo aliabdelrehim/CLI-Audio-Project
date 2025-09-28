@@ -22,10 +22,8 @@ fn main() -> std::io::Result<()> {
         "Show_Me_The_Meaning_Of_Being_Lonely.mp3"
     ];
 
-    let mut song_counter = 0;
-
     let mut input_text = String::new();
-    println!("type 'start' to play songs:");
+    println!("Please enter 'start' to play the playlist:");
 
     // access the keyboard input from the library
     io::stdin()
@@ -33,6 +31,7 @@ fn main() -> std::io::Result<()> {
         .expect("failed to read from stdin");
 
     let button = input_text.trim();
+
 
     for file_path in files {
         let file = File::open(file_path);
@@ -48,26 +47,22 @@ fn main() -> std::io::Result<()> {
                     // loop over playback songs with play/pause for x and y seconds
                     while !_sink.empty() {
 
-                        song_counter += 1; // Increment the counter
-                        println!("Playing song number: {}", song_counter);
+                        let mut input_text = String::new();
+                        println!("press p to pause the song:");
 
-                        print!("Playing for 5 seconds...\n");
-                        _sink.play();
-                        std::thread::sleep(std::time::Duration::from_secs(5));
+                        // access the keyboard input from the library
+                        io::stdin()
+                            .read_line(&mut input_text)
+                            .expect("failed to read from stdin");
 
-                        print!("Paused for 5 second...\n");
-                        _sink.pause();
-                        std::thread::sleep(std::time::Duration::from_secs(5));
+                        let button = input_text.trim();
 
-                        print!("Resuming playback for 3 seconds...\n");
-                        _sink.play();
-                        std::thread::sleep(std::time::Duration::from_secs(3)); 
-
-                        _sink.skip_one();
-
-                        if _sink.len() == 1 {
-                            break;
-                        }      
+                        if button == "p" {
+                            _sink.pause();
+                            println!("song paused");
+                            std::thread::sleep(std::time::Duration::from_secs(1));
+                            
+                        }
                         
                     }
 
