@@ -70,8 +70,8 @@ Notes
 Dependencies
 This project uses the following Rust crates:
 
-. rodio: For audio playback.
-. std: For standard input/output and file handling.
+rodio: For audio playback.
+std: For standard input/output and file handling.
 
 Author
 Ali Abdelrahim - https://github.com/aliabdelrehim
