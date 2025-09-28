@@ -23,7 +23,7 @@ To run this project, you need the following:
 
 2. Navigate to the project directory:
    ```bash
-   cd CLIProject
+   cd C:\your-folder-path\CLIProject
 
 3. Build the project:
    ```bash
