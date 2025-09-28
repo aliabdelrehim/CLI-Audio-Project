@@ -23,7 +23,7 @@ fn main() -> std::io::Result<()> {
     ];
 
     let mut input_text = String::new();
-    println!("Please enter 'start' to play the playlist:");
+    println!("Please enter 'start' to play the playlist or quit to exit:");
 
     // access the keyboard input from the library
     io::stdin()
@@ -32,6 +32,10 @@ fn main() -> std::io::Result<()> {
 
     let button = input_text.trim();
 
+    if button != "start" {
+        println!("Please enter a valid input: 'start' or 'quit'");
+        return Ok(());
+    }
 
     for file_path in files {
         let file = File::open(file_path);
@@ -84,7 +88,10 @@ fn main() -> std::io::Result<()> {
         }
     }
 
-    
+    if button == "quit" {
+        println!("exiting program");
+        return Ok(());
+    }
 
     //code exectution is successful if it reaches ok function (success exit)
     Ok(()) 
