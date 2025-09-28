@@ -12,6 +12,9 @@ This is a simple command-line interface (CLI) audio player built in Rust. It all
 To run this project, you need the following:
 - **Rust**: Ensure you have Rust installed. You can install it from [rust-lang.org](https://www.rust-lang.org/).
 - **Audio Files**: The program uses `.mp3` files. Ensure the files in the playlist exist in the same directory as the executable or adjust the file paths in the code.
+- **Dependency**: Add Rodio and Cpal to the cargo.toml file using the following command
+  ```bash
+  cargo add cpal rodio
 
 ## How to Run
 1. Clone this repository to your local machine:
@@ -70,8 +73,8 @@ Notes
 Dependencies
 This project uses the following Rust crates:
 
-rodio: For audio playback.
-std: For standard input/output and file handling.
+- rodio: For audio playback.
+- std: For standard input/output and file handling.
 
 Author
 Ali Abdelrahim - https://github.com/aliabdelrehim
