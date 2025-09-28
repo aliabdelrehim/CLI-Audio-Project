@@ -15,30 +15,29 @@ fn main() -> std::io::Result<()> {
             .expect("open default audio stream");
     let _sink = rodio::Sink::connect_new(&stream_handle.mixer());
 
+    // array of playlist songs
     let files = [
         "Blue_One_Love.mp3",
         "coldplay_a-sky-full-of-stars-coldplay.mp3", 
         "Show_Me_The_Meaning_Of_Being_Lonely.mp3"
     ];
 
-    let mut input_text = String::new();
-    println!("Please enter 'start' to play the playlist or quit to exit:");
+    // Prompt the user to start playback
 
-    // access the keyboard input from the library
-    io::stdin()
-        .read_line(&mut input_text)
-        .expect("failed to read from stdin");
-
-    let button = input_text.trim();
-
-    if button != "start" {
-        println!("Please enter a valid input: 'start' or 'quit'");
-        return Ok(());
+    if !prompt_user("Please enter 'start' to begin playback:") {
+        return Ok(()); // Exit the program if the user doesn't enter "start"
     }
 
+    let button = "start"; //default start button
+
+    // Iterate over each file in the playlist
     for file_path in files {
+
+        // Open the audio file
         let file = File::open(file_path);
         if let Ok(file) = file {
+
+            //read and decode the audio file and store in decoded_file variable
             let reader = BufReader::new(file);
             let decoded_file = Decoder::try_from(reader);
             if let Ok(decoded_file) = decoded_file {
@@ -53,13 +52,14 @@ fn main() -> std::io::Result<()> {
                         let mut input_text = String::new();
                         println!("press p to pause, r to resume, k to go to the next song or 'quit' to exit");
 
-                        // access the keyboard input from the library
+                        // access the keyboard input from the keyboard library
                         io::stdin()
                             .read_line(&mut input_text)
                             .expect("failed to read from stdin");
 
                         let button = input_text.trim();
 
+                        // pause the song
                         if button == "p" {
                             _sink.pause();
                             println!("song paused");
@@ -67,27 +67,29 @@ fn main() -> std::io::Result<()> {
                             
                         }
 
+                        // resume the song
                         if button == "r" {
                             _sink.play();
                             println!("song resumed");
                             std::thread::sleep(std::time::Duration::from_secs(1));
                         }
 
+                        // play the next song
                         if button == "k" {
                             _sink.skip_one();
                             println!("next song playing");
                             std::thread::sleep(std::time::Duration::from_secs(1));
                         }
 
-                            if button == "quit" {
-                                println!("exiting program");
-                                return Ok(());
-                            }
+                        // quit the program
+                        if button == "quit" {
+                            println!("exiting program");
+                            return Ok(());
+                        }
                         
                     }
 
                     }
-                
             }
         }
     }
@@ -96,3 +98,23 @@ fn main() -> std::io::Result<()> {
     Ok(()) 
 }
 
+// Function to prompt the user for input and check if they entered "start".
+fn prompt_user(message: &str) -> bool {
+    let mut input_text = String::new();
+    println!("{}", message);
+
+    io::stdin()
+        .read_line(&mut input_text)
+        .expect("Failed to read from stdin");
+
+    let button = input_text.trim();
+    if button == "start" {
+        true
+    } else if button == "quit" {
+        println!("Exiting program.");
+        false
+    } else {
+        println!("Invalid input. Exiting program.");
+        false
+    }
+}
