@@ -48,7 +48,7 @@ fn main() -> std::io::Result<()> {
                     while !_sink.empty() {
 
                         let mut input_text = String::new();
-                        println!("press p to pause the song:");
+                        println!("press p to pause, r to resume, k to go to the next song");
 
                         // access the keyboard input from the library
                         io::stdin()
@@ -62,6 +62,18 @@ fn main() -> std::io::Result<()> {
                             println!("song paused");
                             std::thread::sleep(std::time::Duration::from_secs(1));
                             
+                        }
+
+                        if button == "r" {
+                            _sink.play();
+                            println!("song resumed");
+                            std::thread::sleep(std::time::Duration::from_secs(1));
+                        }
+
+                        if button == "k" {
+                            _sink.skip_one();
+                            println!("next song playing");
+                            std::thread::sleep(std::time::Duration::from_secs(1));
                         }
                         
                     }
