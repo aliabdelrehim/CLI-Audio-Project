@@ -3,7 +3,6 @@ use std::io::BufReader;
 use rodio::{Decoder};
 use std::io;
 
-
 /*main function returns a result type that is either Ok
 or an error type std::io::Error
 std::io: standard input/output library
@@ -52,7 +51,7 @@ fn main() -> std::io::Result<()> {
                     while !_sink.empty() {
 
                         let mut input_text = String::new();
-                        println!("press p to pause, r to resume, k to go to the next song");
+                        println!("press p to pause, r to resume, k to go to the next song or 'quit' to exit");
 
                         // access the keyboard input from the library
                         io::stdin()
@@ -79,6 +78,11 @@ fn main() -> std::io::Result<()> {
                             println!("next song playing");
                             std::thread::sleep(std::time::Duration::from_secs(1));
                         }
+
+                            if button == "quit" {
+                                println!("exiting program");
+                                return Ok(());
+                            }
                         
                     }
 
@@ -86,11 +90,6 @@ fn main() -> std::io::Result<()> {
                 
             }
         }
-    }
-
-    if button == "quit" {
-        println!("exiting program");
-        return Ok(());
     }
 
     //code exectution is successful if it reaches ok function (success exit)
