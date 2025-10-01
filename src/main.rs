@@ -23,7 +23,6 @@ fn main() -> std::io::Result<()> {
     ];
 
     // Prompt the user to start playback
-
     if !prompt_user("Please enter 'start' to begin playback:") {
         return Ok(()); // Exit the program if the user doesn't enter "start"
     }
@@ -31,15 +30,15 @@ fn main() -> std::io::Result<()> {
     let button = "start"; //default start button
 
     // Iterate over each file in the playlist
-    for file_path in files {
-
+    for (index, file_path) in files.iter().enumerate() {
         // Open the audio file
         let file = File::open(file_path);
         if let Ok(file) = file {
-
             //read and decode the audio file and store in decoded_file variable
             let reader = BufReader::new(file);
             let decoded_file = Decoder::try_from(reader);
+            // get the index of the songs
+            let song_index = index;
             if let Ok(decoded_file) = decoded_file {
 
                 // Sink handles the audio playback instead of stream_handle.play
@@ -48,6 +47,7 @@ fn main() -> std::io::Result<()> {
                 if button == "start" {
                     // loop over playback songs with play/pause for x and y seconds
                     while !_sink.empty() {
+                        println!("Now playing song at index {}: {}", song_index, file_path);
 
                         let mut input_text = String::new();
                         println!("press p to pause, r to resume, k to go to the next song or 'quit' to exit");
