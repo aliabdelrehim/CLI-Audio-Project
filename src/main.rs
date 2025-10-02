@@ -1,4 +1,4 @@
-use std::{fs::File};
+use std::fs::File;
 use std::io::BufReader;
 use rodio::{Decoder};
 use std::io;
@@ -27,69 +27,79 @@ fn main() -> std::io::Result<()> {
         return Ok(()); // Exit the program if the user doesn't enter "start"
     }
 
-    let button = "start"; //default start button
+    let mut current_index = 0;
 
-    // Iterate over each file in the playlist
-    for (index, file_path) in files.iter().enumerate() {
-        // Open the audio file
-        let file = File::open(file_path);
-        if let Ok(file) = file {
-            //read and decode the audio file and store in decoded_file variable
-            let reader = BufReader::new(file);
-            let decoded_file = Decoder::try_from(reader);
-            // get the index of the songs
-            let song_index = index;
-            if let Ok(decoded_file) = decoded_file {
+    while current_index < files.len(){
+        
+        let file_path = files[current_index];
+        
+        let file = File::open(file_path)?;
+        let reader = BufReader::new(file);
+        let decoded_file = Decoder::new(reader);
 
-                // Sink handles the audio playback instead of stream_handle.play
-                _sink.append(decoded_file);
+        if let Ok(decoded_file) = decoded_file {
+            // Sink handles the audio playback instead of stream_handle.play
+            _sink.append(decoded_file);
+            println!("Now playing song {}: {}", current_index + 1, file_path);
+        }
+
+        // loop over playback songs with play/pause for x and y seconds
+        'song_loop: while !_sink.empty() {     
+
+            let mut input_text = String::new();
+            println!("press p to pause, r to resume, k/j to go to the next/previous song or 'quit' to exit");
+
+            // access the keyboard input from the keyboard library
+            io::stdin()
+                .read_line(&mut input_text)
+                .expect("failed to read from stdin");
+
+            let button = input_text.trim();
+
+            match button {
+                "p" => {
+                    _sink.pause();
+                    println!("song paused");
+                }
+
+                "r" => {
+                    _sink.play();
+                    println!("song resumed");
+                }
                 
-                if button == "start" {
-                    // loop over playback songs with play/pause for x and y seconds
-                    while !_sink.empty() {
-                        println!("Now playing song at index {}: {}", song_index, file_path);
-
-                        let mut input_text = String::new();
-                        println!("press p to pause, r to resume, k to go to the next song or 'quit' to exit");
-
-                        // access the keyboard input from the keyboard library
-                        io::stdin()
-                            .read_line(&mut input_text)
-                            .expect("failed to read from stdin");
-
-                        let button = input_text.trim();
-
-                        // pause the song
-                        if button == "p" {
-                            _sink.pause();
-                            println!("song paused");
-                            std::thread::sleep(std::time::Duration::from_secs(1));
-                            
-                        }
-
-                        // resume the song
-                        if button == "r" {
-                            _sink.play();
-                            println!("song resumed");
-                            std::thread::sleep(std::time::Duration::from_secs(1));
-                        }
-
-                        // play the next song
-                        if button == "k" {
-                            _sink.skip_one();
-                            println!("next song playing");
-                            std::thread::sleep(std::time::Duration::from_secs(1));
-                        }
-
-                        // quit the program
-                        if button == "quit" {
-                            println!("exiting program");
-                            return Ok(());
-                        }
+                "k" => {
+                    if current_index >= files.len() - 1 {
+                        println!("Already at the last song");
+                        continue;
+                    }
+                    println!("next song playing");
+                    _sink.skip_one();
+                    current_index += 1;
+                    break 'song_loop;
+                }
                         
+                "j" => {
+                    if current_index > 0 {
+                         println!("previous song playing");
+                        _sink.skip_one();
+                        current_index -= 1;
+                        break 'song_loop;
+                    } else {
+                        println!("Restarting the playlist");
+                        _sink.skip_one();
+                        break 'song_loop;
                     }
+                }
 
-                    }
+                "quit" => {
+                    println!("Exiting program.");
+                    return Ok(());
+                }
+
+                // Add this wildcard pattern to handle all other inputs
+                _ => {
+                    println!("Invalid command");
+                }
             }
         }
     }
