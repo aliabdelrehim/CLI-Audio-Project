@@ -101,6 +101,9 @@ fn main() -> std::io::Result<()> {
                     println!("Invalid command");
                 }
             }
+
+            std::thread::sleep(std::time::Duration::from_millis(100));
+            
         }
     }
 
