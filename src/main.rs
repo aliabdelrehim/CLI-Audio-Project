@@ -17,6 +17,7 @@ fn main() -> std::io::Result<()> {
 
     // array of playlist songs
     let files = [
+        "censor-beep-10-seconds.mp3",
         "Blue_One_Love.mp3",
         "coldplay_a-sky-full-of-stars-coldplay.mp3", 
         "Show_Me_The_Meaning_Of_Being_Lonely.mp3"
@@ -65,6 +66,11 @@ fn main() -> std::io::Result<()> {
                 "r" => {
                     _sink.play();
                     println!("song resumed");
+                    if _sink.empty() {
+                        println!("song finished playing");
+                        current_index += 1;
+                        break 'song_loop;
+                    }
                 }
                 
                 "k" => {
@@ -105,6 +111,7 @@ fn main() -> std::io::Result<()> {
             std::thread::sleep(std::time::Duration::from_millis(100));
             
         }
+        
     }
 
     //code exectution is successful if it reaches ok function (success exit)
