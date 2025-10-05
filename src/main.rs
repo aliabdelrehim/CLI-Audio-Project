@@ -19,8 +19,7 @@ fn main() -> std::io::Result<()> {
     let files = [
         "Blue_One_Love.mp3",
         "coldplay_a-sky-full-of-stars-coldplay.mp3", 
-        "Show_Me_The_Meaning_Of_Being_Lonely.mp3",
-        "smack.mp3"
+        "Show_Me_The_Meaning_Of_Being_Lonely.mp3"
     ];
 
     // Prompt the user to start playback
@@ -66,11 +65,6 @@ fn main() -> std::io::Result<()> {
                 "r" => {
                     _sink.play();
                     println!("song resumed");
-                    if current_index >= files.len() - 1 {
-                        println!("End of playlist reached");
-                        current_index = 0;
-                        break 'song_loop;
-                    }
                 }
                 
                 "k" => {
