@@ -17,9 +17,10 @@ fn main() -> std::io::Result<()> {
 
     // array of playlist songs
     let files = [
-        "Blue_One_Love.mp3",
-        "coldplay_a-sky-full-of-stars-coldplay.mp3", 
-        "Show_Me_The_Meaning_Of_Being_Lonely.mp3"
+        "F1V6EngineSound.mp3",
+        "F1V8EngineSound.mp3",
+        "F1V10EngineSound.mp3",
+        "F1V12EngineSound.mp3",
     ];
 
     // Prompt the user to start playback
@@ -73,20 +74,22 @@ fn main() -> std::io::Result<()> {
                         continue;
                     }
                     println!("next song playing");
-                    _sink.skip_one();
+                    _sink.stop();
                     current_index += 1;
+                    _sink.play();
                     break 'song_loop;
                 }
                         
                 "j" => {
                     if current_index > 0 {
                          println!("previous song playing");
-                        _sink.skip_one();
                         current_index -= 1;
+                        _sink.stop();
                         break 'song_loop;
                     } else {
                         println!("Restarting the playlist");
-                        _sink.skip_one();
+                        current_index = 0;
+                        _sink.stop();
                         break 'song_loop;
                     }
                 }
